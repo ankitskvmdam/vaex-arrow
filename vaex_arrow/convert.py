@@ -47,38 +47,38 @@ def column_from_arrow_array(arrow_array):
     
     # Edited by Ank
     elif len(buffers) == 4 and isinstance(arrow_array.type, pyarrow.lib.ListType):
-        return numpy_nd_array_from_arrow_nd_array(arrow_array)
+        return np.array(arrow_array)
     
     else:
         raise TypeError('type unsupported: %r' % arrow_type)
 
 
 # Edited by Ank
-def numpy_nd_array_from_arrow_nd_array(arrow_array):
-    if isinstance(arrow_array[0][0], pyarrow.lib.Int64Value):
-        dtype = np.int64
-    elif isinstance(arrow_array[0][0], pyarrow.lib.Int32Value):
-        dtype = np.int32
-    elif isinstance(arrow_array[0][0], pyarrow.lib.Int16Value):
-        dtype = np.int16
-    elif isinstance(arrow_array[0][0], pyarrow.lib.Int8Value):
-        dtype = np.int8
-    elif isinstance(arrow_array[0][0], pyarrow.lib.DoubleValue):
-        dtype = np.float64
-    else:
-        raise TypeError(f"Type unsupported: {arrow_array.type}")
+# def numpy_nd_array_from_arrow_nd_array(arrow_array):
+#     if isinstance(arrow_array[0][0], pyarrow.lib.Int64Value):
+#         dtype = np.int64
+#     elif isinstance(arrow_array[0][0], pyarrow.lib.Int32Value):
+#         dtype = np.int32
+#     elif isinstance(arrow_array[0][0], pyarrow.lib.Int16Value):
+#         dtype = np.int16
+#     elif isinstance(arrow_array[0][0], pyarrow.lib.Int8Value):
+#         dtype = np.int8
+#     elif isinstance(arrow_array[0][0], pyarrow.lib.DoubleValue):
+#         dtype = np.float64
+#     else:
+#         raise TypeError(f"Type unsupported: {arrow_array.type}")
 
-    _, indices, _, data_buffer = arrow_array.buffers()
+#     _, indices, _, data_buffer = arrow_array.buffers()
 
-    indices = np.frombuffer(indices, np.int32)
-    data_buffer = np.frombuffer(data_buffer, dtype)
-    array = []
+#     indices = np.frombuffer(indices, np.int32)
+#     data_buffer = np.frombuffer(data_buffer, dtype)
+#     array = []
 
-    for i in range(len(indices) - 1):
-        current_array = data_buffer[indices[i] : indices[i + 1]]
-        array.append(current_array)
+#     for i in range(len(indices) - 1):
+#         current_array = data_buffer[indices[i] : indices[i + 1]]
+#         array.append(current_array)
 
-    return np.array(array)
+#     return np.array(array)
 
 def numpy_array_from_arrow_array(arrow_array):
     arrow_type = arrow_array.type
